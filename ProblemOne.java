@@ -31,8 +31,11 @@ Output
 5
 */
 public class ProblemOne {
-    private static Map<String, Set<String>> productToUsers = new LinkedHashMap<>();
-    private static SortedMap<String, Integer> minuteToFreq = new TreeMap<>();
+    // Use LinkedHashMap to keep the input order
+    private static final Map<String, Set<String>> productToUsers = new LinkedHashMap<>();
+
+    // Use TreeMap to have the order of the timestamp, which is more efficient for range query.
+    private static final SortedMap<String, Integer> minuteToFreq = new TreeMap<>();
 
     private static void preprocess(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader("./" + filename))) {
@@ -42,6 +45,9 @@ public class ProblemOne {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] splittedArr = line.split("\\s+");
+                if (splittedArr.length != 4) {
+                    throw new Exception("Input not valid!");
+                }
                 String productId = splittedArr[0];
                 String userId = splittedArr[1];
                 String timestamp = splittedArr[2] + " " + splittedArr[3];
@@ -71,7 +77,7 @@ public class ProblemOne {
     }
 
     public static void main(String[] args) {
-	String filename = "problem_one.txt";
+        String filename = "problem_one.txt";
         preprocess(filename);
         printUniqueUserCountForAllProjects();
         printVisitsByTimestampRange("2019-01-01 00 - 2019-01-03 00");
